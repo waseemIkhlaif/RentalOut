@@ -17,11 +17,11 @@ router.get('/:id', async (req, res) => {
     try {
         const item = await ItemModel.findByPk(req.params.id);
         if (!item) {
-            return res.status(404).json({ message: 'user not found' });
+            return res.status(404).json({ message: 'item not found' });
         }
         res.status(200).json(item);
     } catch (error) {
-        res.status(500).json({ message: 'not fetch user', error });
+        res.status(500).json({ message: 'not fetch item', error });
     }
 });
 
@@ -40,9 +40,9 @@ router.delete('/:id', async (req, res) => {
     try {
         const deleteitem = await ItemModel.destroy({ where: { id: req.params.id } });
         if (deleteitem) {
-            res.status(200).json({ message: 'User Deleted' });
+            res.status(200).json({ message: 'item Deleted' });
         } else {
-            res.status(404).json({ message: 'User Not Found' });
+            res.status(404).json({ message: 'item Not Found' });
         }
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -58,7 +58,7 @@ router.put('/:id', async (req, res) => {
         if (updateitem) {
             res.status(200).json(updateitem);
         } else {
-            res.status(404).json({ message: 'User Not Found' });
+            res.status(404).json({ message: 'item Not Found' });
         }
     } catch (error) {
         res.status(400).json({ error: error.message });
