@@ -17,11 +17,11 @@ router.get('/:id', async (req, res) => {
     try {
         const Transaction = await TransactionModel.findByPk(req.params.id);
         if (!Transaction) {
-            return res.status(404).json({ message: 'user not found' });
+            return res.status(404).json({ message: 'Transaction not found' });
         }
         res.status(200).json(Transaction);
     } catch (error) {
-        res.status(500).json({ message: 'not fetch user', error });
+        res.status(500).json({ message: 'not fetch Transaction', error });
     }
 });
 
@@ -40,9 +40,9 @@ router.delete('/:id', async (req, res) => {
     try {
         const deleteTransaction = await TransactionModel.destroy({ where: { id: req.params.id } });
         if (deleteTransaction) {
-            res.status(200).json({ message: 'User Deleted' });
+            res.status(200).json({ message: 'Transaction Deleted' });
         } else {
-            res.status(404).json({ message: 'User Not Found' });
+            res.status(404).json({ message: 'Transaction Not Found' });
         }
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -58,7 +58,7 @@ router.put('/:id', async (req, res) => {
         if (updateTransaction) {
             res.status(200).json(updateTransaction);
         } else {
-            res.status(404).json({ message: 'User Not Found' });
+            res.status(404).json({ message: 'Transaction Not Found' });
         }
     } catch (error) {
         res.status(400).json({ error: error.message });

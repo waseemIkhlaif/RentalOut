@@ -17,11 +17,11 @@ router.get('/:id', async (req, res) => {
     try {
         const Logistic = await LogisticModel.findByPk(req.params.id);
         if (!Logistic) {
-            return res.status(404).json({ message: 'user not found' });
+            return res.status(404).json({ message: 'Logistic not found' });
         }
         res.status(200).json(Logistic);
     } catch (error) {
-        res.status(500).json({ message: 'not fetch user', error });
+        res.status(500).json({ message: 'not fetch Logistic', error });
     }
 });
 
@@ -40,9 +40,9 @@ router.delete('/:id', async (req, res) => {
     try {
         const deleteLogistic = await LogisticModel.destroy({ where: { id: req.params.id } });
         if (deleteLogistic) {
-            res.status(200).json({ message: 'User Deleted' });
+            res.status(200).json({ message: 'Logistic Deleted' });
         } else {
-            res.status(404).json({ message: 'User Not Found' });
+            res.status(404).json({ message: 'Logistic Not Found' });
         }
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -58,7 +58,7 @@ router.put('/:id', async (req, res) => {
         if (updateLogistic) {
             res.status(200).json(updateLogistic);
         } else {
-            res.status(404).json({ message: 'User Not Found' });
+            res.status(404).json({ message: 'Logistic Not Found' });
         }
     } catch (error) {
         res.status(400).json({ error: error.message });

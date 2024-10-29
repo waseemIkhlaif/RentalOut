@@ -17,11 +17,11 @@ router.get('/:id', async (req, res) => {
     try {
         const review = await ReviewModel.findByPk(req.params.id);
         if (!review) {
-            return res.status(404).json({ message: 'user not found' });
+            return res.status(404).json({ message: 'review not found' });
         }
         res.status(200).json(review);
     } catch (error) {
-        res.status(500).json({ message: 'not fetch user', error });
+        res.status(500).json({ message: 'not fetch review', error });
     }
 });
 
@@ -40,9 +40,9 @@ router.delete('/:id', async (req, res) => {
     try {
         const deletereview = await ReviewModel.destroy({ where: { id: req.params.id } });
         if (deletereview) {
-            res.status(200).json({ message: 'User Deleted' });
+            res.status(200).json({ message: 'review Deleted' });
         } else {
-            res.status(404).json({ message: 'User Not Found' });
+            res.status(404).json({ message: 'review Not Found' });
         }
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -58,7 +58,7 @@ router.put('/:id', async (req, res) => {
         if (updatereview) {
             res.status(200).json(updatereview);
         } else {
-            res.status(404).json({ message: 'User Not Found' });
+            res.status(404).json({ message: 'review Not Found' });
         }
     } catch (error) {
         res.status(400).json({ error: error.message });
