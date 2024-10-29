@@ -1,46 +1,47 @@
-// models/Rental.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Rental = sequelize.define('Rental', {
-    rental_id: {
+    id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
-        primaryKey: true,
+        primaryKey: true
     },
-    item_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Items',
-            key: 'item_id',
-        },
-    },
-    renter_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Users',
-            key: 'user_id',
-        },
-    },
-    rental_start_date: {
+    startDate: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: false
     },
-    rental_end_date: {
+    endDate: {
         type: DataTypes.DATE,
-        allowNull: false,
-    },
-    total_price: {
-        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
     },
     status: {
         type: DataTypes.ENUM('pending', 'confirmed', 'completed', 'canceled'),
-        defaultValue: 'pending',
+        defaultValue: 'pending'
     },
-}, {
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    totalPrice: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+    },
+    itemId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'Items',
+            key: 'id'
+        }
+    },
+    renterId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'Users',
+            key: 'id'
+        }
+    }
 });
+
+Rental.associate = models => {
+    Rental.belongsTo(models.Item, { foreignKey: 'itemId' });
+    Rental.belongsTo(models.User, { foreignKey: 'renterId' });
+};
 
 module.exports = Rental;

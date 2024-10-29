@@ -1,37 +1,31 @@
-// models/Transaction.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Transaction = sequelize.define('Transaction', {
-    transaction_id: {
+const Payment = sequelize.define('Payment', {
+    id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
-        primaryKey: true,
-    },
-    rental_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Rentals',
-            key: 'rental_id',
-        },
+        primaryKey: true
     },
     amount: {
         type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-    },
-    payment_method: {
-        type: DataTypes.STRING(50),
-    },
-    transaction_date: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
+        allowNull: false
     },
     status: {
-        type: DataTypes.ENUM('pending', 'completed', 'failed'),
-        defaultValue: 'pending',
+        type: DataTypes.ENUM('completed', 'pending', 'failed'),
+        defaultValue: 'pending'
     },
-}, {
-    timestamps: true,
+    rentalId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'Rentals',
+            key: 'id'
+        }
+    }
 });
 
-module.exports = Transaction;
+Payment.associate = models => {
+    Payment.belongsTo(models.Rental, { foreignKey: 'rentalId' });
+};
+
+module.exports = Payment;

@@ -1,41 +1,38 @@
-// models/Review.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Review = sequelize.define('Review', {
-    review_id: {
+    id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
-        primaryKey: true,
-    },
-    rental_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Rentals',
-            key: 'rental_id',
-        },
-    },
-    reviewer_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Users',
-            key: 'user_id',
-        },
+        primaryKey: true
     },
     rating: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-            min: 1,
-            max: 5,
-        },
+        allowNull: false
     },
-    review_text: {
-        type: DataTypes.TEXT,
+    comment: {
+        type: DataTypes.TEXT
     },
-}, {
-    timestamps: true,
-    createdAt: 'created_at',
+    itemId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'Items',
+            key: 'id'
+        }
+    },
+    reviewerId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'Users',
+            key: 'id'
+        }
+    }
 });
+
+Review.associate = models => {
+    Review.belongsTo(models.User, { foreignKey: 'reviewerId' });
+    Review.belongsTo(models.Item, { foreignKey: 'itemId' });
+};
 
 module.exports = Review;

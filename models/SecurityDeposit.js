@@ -1,33 +1,31 @@
-// models/SecurityDeposit.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const SecurityDeposit = sequelize.define('SecurityDeposit', {
-    deposit_id: {
+    id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
-        primaryKey: true,
+        primaryKey: true
     },
-    rental_id: {
+    depositAmount: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+    },
+    status: {
+        type: DataTypes.ENUM('held', 'refunded', 'forfeited'),
+        defaultValue: 'held'
+    },
+    userId: {
         type: DataTypes.INTEGER,
         references: {
-            model: 'Rentals',
-            key: 'rental_id',
-        },
-    },
-    deposit_amount: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-    },
-    is_refunded: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-    },
-    refund_date: {
-        type: DataTypes.DATE,
-    },
-}, {
-    timestamps: true,
+            model: 'Users',
+            key: 'id'
+        }
+    }
 });
+
+SecurityDeposit.associate = models => {
+    SecurityDeposit.belongsTo(models.User, { foreignKey: 'userId' });
+};
 
 module.exports = SecurityDeposit;
