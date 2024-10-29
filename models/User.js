@@ -1,51 +1,48 @@
-// models/User.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');  // Import the Sequelize instance
+const sequelize = require('../config/database');
 
 const User = sequelize.define('User', {
-    user_id: {
+    id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
-        primaryKey: true,
+        primaryKey: true
     },
-    first_name: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
+    firstName: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    last_name: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
+    lastName: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
     email: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: true
     },
     password: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    phone: {
-        type: DataTypes.STRING(20),
-    },
-    address: {
-        type: DataTypes.TEXT,
-    },
-    verified: {
+    isVerified: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        defaultValue: false
     },
-    role_id: {
+    roleId: {
         type: DataTypes.INTEGER,
         references: {
             model: 'Roles',
-            key: 'role_id',
-        },
-    },
-}, {
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+            key: 'id'
+        }
+    }
 });
+
+User.associate = models => {
+    User.hasMany(models.Item, { foreignKey: 'ownerId' });
+    User.hasMany(models.Rental, { foreignKey: 'renterId' });
+    User.hasMany(models.Review, { foreignKey: 'reviewerId' });
+    User.belongsTo(models.Role, { foreignKey: 'roleId' });
+    User.hasOne(models.SecurityDeposit, { foreignKey: 'userId' });
+};
 
 module.exports = User;

@@ -1,19 +1,21 @@
-// models/Category.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Category = sequelize.define('Category', {
-    category_id: {
+    id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
-        primaryKey: true,
+        primaryKey: true
     },
-    category_name: {
-        type: DataTypes.STRING(100),
+    categoryName: {
+        type: DataTypes.STRING,
         allowNull: false,
-    },
-}, {
-    timestamps: false,
+        unique: true
+    }
 });
+
+Category.associate = models => {
+    Category.hasMany(models.Item, { foreignKey: 'categoryId' });
+};
 
 module.exports = Category;

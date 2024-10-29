@@ -1,57 +1,49 @@
-// models/Item.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Item = sequelize.define('Item', {
-    item_id: {
+    id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
-        primaryKey: true,
+        primaryKey: true
     },
-    user_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Users',
-            key: 'user_id',
-        },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    category_id: {
+    description: {
+        type: DataTypes.TEXT
+    },
+    pricePerDay: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+    },
+    isAvailable: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+    },
+    categoryId: {
         type: DataTypes.INTEGER,
         references: {
             model: 'Categories',
-            key: 'category_id',
-        },
+            key: 'id'
+        }
     },
-    item_name: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-    },
-    description: {
-        type: DataTypes.TEXT,
-    },
-    price_per_day: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-    },
-    available_from: {
-        type: DataTypes.DATE,
-    },
-    available_to: {
-        type: DataTypes.DATE,
-    },
-    condition: {
-        type: DataTypes.STRING(50),
-    },
-    security_deposit: {
-        type: DataTypes.DECIMAL(10, 2),
-    },
-    image_url: {
-        type: DataTypes.STRING(255),
-    },
-}, {
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    ownerId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'Users',
+            key: 'id'
+        }
+    }
 });
+
+Item.associate = models => {
+    Item.belongsTo(models.User, { foreignKey: 'ownerId' });
+    Item.belongsTo(models.Category, { foreignKey: 'categoryId' });
+    Item.hasMany(models.Rental, { foreignKey: 'itemId' });
+    Item.hasMany(models.Review, { foreignKey: 'itemId' });
+    Item.hasMany(models.Logistics, { foreignKey: 'itemId' });
+};
 
 module.exports = Item;
