@@ -28,10 +28,38 @@ router.get('/:id', async (req, res) => {
 //create a new Transaction
 router.post('/', async (req, res) => {
     try {
-        const NewTransaction = await TransactionModel.create(req.body);
-        res.status(201).json(NewTransaction);
+        const { itemId, startDate, endDate, renterId } = req.body;
+        
+        // Fetch item details
+        const item = await Item.findByPk(itemId);
+        if (!item) {
+            return res.status(404).json({ error: 'Item not found' });
+        }
+
+        // Calculate rental duration in days
+        const rentalDays = Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
+        const rentalCost = rentalDays * item.pricePerDay;
+
+        // Calculate fees
+        const serviceFee = rentalCost * 0.1; // Assuming service fee is 10%
+        const insuranceFee = item.requiresInsurance ? rentalCost * 0.05 : 0.00; // Assuming insurance is 5% if required
+        const totalAmount = rentalCost + serviceFee + insuranceFee;
+
+        // Handle security deposit if required
+        let depositAmount = 0.00;
+        if (item.requiresDeposit) {
+            depositAmount = item.depositAmount;
+            await SecurityDeposit.create({
+                userId: renterId,
+                depositAmount,
+                status: 'held'
+            });
+        }
+
+        res.status(201).json({ rental: newRental, payment, message: "Rental created with fees, deposit, and payment tracking" });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error(error);
+        res.status(500).json({ error: 'Failed to create rental with revenue model and payment tracking' });
     }
 });
 
